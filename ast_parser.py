@@ -12,9 +12,9 @@ LPAREN = "("
 RPAREN = ")"
 
 class Parser:
-    def __init__(self, tokens):
-        self.tokens = tokens
-        self.current_token = self.tokens[0]
+    def __init__(self):
+        self.tokens = []
+        self.current_token = None
         self.index = 0
 
     def error(self):
@@ -78,7 +78,9 @@ class Parser:
 
         return node
 
-    def parse(self):
+    def parse(self, tokens):
+        self.tokens = tokens
+        self.current_token = self.tokens[0]
         self.tree = self.expresion()
         return self.tree
 
