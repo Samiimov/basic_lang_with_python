@@ -24,7 +24,6 @@ class Lexer:
         Move to next character in input str
         """
         self.pos += 1
-        print(self.pos)
         if self.pos == len(self.input):
             self.current_char = None
         else:
@@ -55,9 +54,11 @@ class Lexer:
                 self.add_tokens(T_STRING, self.current_literal)
                 self.add_tokens(T_MULTIPLY, self.current_char)
             elif self.current_char == LPAREN:
-                self.add_tokens(LPAREN, self.current_literal)
+                self.add_tokens(T_STRING, self.current_literal)
+                self.add_tokens(LPAREN, self.current_char)
             elif self.current_char == RPAREN:
-                self.add_tokens(RPAREN, self.current_literal)
+                self.add_tokens(T_STRING, self.current_literal)
+                self.add_tokens(RPAREN, self.current_char)
             else: 
                 self.current_literal += self.current_char
             self.next_char()

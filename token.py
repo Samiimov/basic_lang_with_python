@@ -4,4 +4,4 @@ class Token:
         self.value = value
 
     def __repr__(self) -> str:
-        return  f"Token(Type: {self.type}, Value : {self.value})"
+        return  f"Token( Type: {self.type}, Value : {self.value} )"
