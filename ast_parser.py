@@ -1,17 +1,7 @@
-from token import Token
-# TOKEN TYPES
-T_PLUS = "+"
-T_MINUS = "-"
-T_DIVISION = "/"
-T_MULTIPLY = "*"
-T_SEPARATOR = "\n"
-T_NUMBER = "NUMBER"
-T_STRING = "STRING"
-# PARENTHESIS
-LPAREN = "("
-RPAREN = ")"
+from lexer_token import Token
+from variables import Variables
 
-class Parser:
+class Parser(Variables):
     def __init__(self):
         self.tokens = []
         self.current_token = None
@@ -38,15 +28,16 @@ class Parser:
         Produce factor for AST
         """
         token = self.current_token
-        if token.type == T_NUMBER:
-            self.eat(T_NUMBER)
+        if token.type == self.T_NUMBER:
+            self.eat(self.T_NUMBER)
             return Num(token)
-        elif token.type == T_STRING:
-            pass
-        elif token.type == LPAREN:
-            self.eat(LPAREN)
+        elif token.type == self.T_VARIABLE:
+            self.eat(self.T_VARIABLE)
+            return Variable(token)
+        elif token.type == self.LPAREN:
+            self.eat(self.LPAREN)
             node = self.expresion()
-            self.eat(RPAREN)
+            self.eat(self.RPAREN)
             return node
 
     def term(self):
@@ -55,12 +46,12 @@ class Parser:
         """
         node = self.factor()
 
-        while self.current_token.type in (T_MULTIPLY, T_DIVISION):
+        while self.current_token.type in (self.T_MULTIPLY, self.T_DIVISION):
             token = self.current_token
-            if token.type == T_MULTIPLY:
-                self.eat(T_MULTIPLY)
-            elif token.type == T_DIVISION:
-                self.eat(T_DIVISION)
+            if token.type == self.T_MULTIPLY:
+                self.eat(self.T_MULTIPLY)
+            elif token.type == self.T_DIVISION:
+                self.eat(self.T_DIVISION)
 
             node = BinOp(left=node, op=token, right=self.factor())
 
@@ -72,12 +63,12 @@ class Parser:
         """
         node = self.term()
 
-        while self.current_token.type in (T_PLUS, T_MINUS):
+        while self.current_token.type in (self.T_PLUS, self.T_MINUS):
             token = self.current_token
-            if token.type == T_PLUS:
-                self.eat(T_PLUS)
-            elif token.type == T_MINUS:
-                self.eat(T_MINUS)
+            if token.type == self.T_PLUS:
+                self.eat(self.T_PLUS)
+            elif token.type == self.T_MINUS:
+                self.eat(self.T_MINUS)
 
             node = BinOp(left=node, op=token, right=self.term())
 
@@ -117,3 +108,12 @@ class Str:
 
     def __repr__(self) -> str:
         return f"Str( Value : {self.value}, Token : {self.token} )"
+
+class Variable:
+    def __init__(self, token) -> None:
+        self.value = token.value
+        self.token = token.type
+        self.name = token.name
+
+    def __repr__(self) -> None:
+        return f"Var( Value : {self.value}, Token : {self.token}, Name : {self.name})"

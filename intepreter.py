@@ -1,7 +1,8 @@
 from ast_parser import BinOp, Num, Str
-class Interpreter:
+from variables import Variables
+class Interpreter(Variables):
     def __init__(self) -> None:
-        pass
+        self.variables = []
 
     def interpret(self, node : BinOp):
         return self.generic_visit(node)
@@ -26,3 +27,7 @@ class Interpreter:
 
     def visit_String(self, node : Str):
         return node.value
+
+    def visit_Variable(self, node : Str):
+        self.variables.append(node)
+        return None
